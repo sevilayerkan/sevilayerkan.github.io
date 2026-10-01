@@ -1,0 +1,129 @@
+---
+import XPDialog from "./XPDialog.astro";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+---
+
+<XPDialog
+  id="xp-console"
+  class="xp-console"
+  title={t.console.title}
+  size="lg"
+  closeLabel={t.common.close}
+>
+  <div
+    class="xp-console__app"
+    data-console
+    data-console-prompt={t.console.prompt}
+    data-console-banner={t.console.banner}
+    data-console-help={t.console.help}
+    data-console-whoami={t.console.whoami}
+    data-console-penguin={t.console.penguin}
+    data-console-not-found={t.console.notFound}
+  >
+    <div
+      class="xp-console__log"
+      data-console-log
+      role="log"
+      aria-live="polite"
+      aria-relevant="additions"
+    ></div>
+
+    <form class="xp-console__line" data-console-form>
+      <label class="visually-hidden" for="xp-console-input">
+        {t.console.inputLabel}
+      </label>
+      <span class="xp-console__prompt" aria-hidden="true" data-console-prompt-label>
+        {t.console.prompt}
+      </span>
+      <input
+        id="xp-console-input"
+        class="xp-console__input"
+        name="command"
+        type="text"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        data-console-input
+        data-xp-initial-focus
+      />
+    </form>
+  </div>
+</XPDialog>
+
+<script>
+  import "../../scripts/console";
+</script>
+
+<style>
+  :global(.xp-dialog.xp-console) {
+    --xp-dialog-width: 640px;
+  }
+
+  :global(.xp-dialog.xp-console .xp-dialog__body) {
+    padding: 0;
+    background: #0c0c0c;
+    color: #c3c3c3;
+    border-color: #0c0c0c;
+  }
+
+  .xp-console__app {
+    display: grid;
+    grid-template-rows: minmax(180px, 42vh) auto;
+    font-family: "Lucida Console", Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .xp-console__log {
+    overflow: auto;
+    min-height: 180px;
+    padding: 10px 12px 4px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: #c3c3c3;
+  }
+
+  .xp-console__line {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0;
+    padding: 0 12px 10px;
+  }
+
+  .xp-console__prompt {
+    color: #c3c3c3;
+    user-select: none;
+  }
+
+  .xp-console__input {
+    min-width: 0;
+    width: 100%;
+    border: 0;
+    padding: 0 0 0 6px;
+    background: transparent;
+    color: #c3c3c3;
+    font: inherit;
+    caret-color: #c3c3c3;
+    animation: xp-console-caret 1s step-end infinite;
+  }
+
+  .xp-console__input:focus-visible {
+    outline: 2px solid #c3c3c3;
+    outline-offset: 2px;
+  }
+
+  @keyframes xp-console-caret {
+    50% {
+      caret-color: transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xp-console__input {
+      animation: none;
+    }
+  }
+</style>

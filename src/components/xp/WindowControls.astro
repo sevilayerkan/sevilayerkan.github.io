@@ -1,0 +1,95 @@
+---
+import { getLocaleFromPath, ui } from "../../i18n";
+
+interface Props {
+  closeMode?: "chrome" | "dialog";
+  closeLabel?: string;
+}
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale);
+
+const {
+  closeMode = "chrome",
+  closeLabel = t.common.close,
+} = Astro.props;
+---
+
+<div class="window-controls">
+  <button
+    class="window-controls__btn"
+    type="button"
+    data-xp-dialog-open="chrome-minimize"
+    aria-haspopup="dialog"
+    aria-controls="chrome-minimize"
+    aria-label={t.common.minimize}
+  >
+    _
+  </button>
+  <button
+    class="window-controls__btn"
+    type="button"
+    data-xp-dialog-open="chrome-maximize"
+    aria-haspopup="dialog"
+    aria-controls="chrome-maximize"
+    aria-label={t.common.maximize}
+  >
+    □
+  </button>
+  {
+    closeMode === "dialog" ? (
+      <button
+        class="window-controls__btn window-controls__btn--close"
+        type="button"
+        data-xp-dialog-close
+        aria-label={closeLabel}
+      >
+        ×
+      </button>
+    ) : (
+      <button
+        class="window-controls__btn window-controls__btn--close"
+        type="button"
+        data-xp-dialog-open="chrome-close"
+        aria-haspopup="dialog"
+        aria-controls="chrome-close"
+        aria-label={t.common.close}
+      >
+        ×
+      </button>
+    )
+  }
+</div>
+
+<style>
+  .window-controls {
+    display: flex;
+    gap: 3px;
+    flex: 0 0 auto;
+  }
+
+  .window-controls__btn {
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--xp-focus-on-blue);
+    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--xp-control-top), var(--xp-control-bottom));
+    color: var(--xp-titlebar-text);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: inset 1px 1px 1px rgb(255 255 255 / 0.45);
+  }
+
+  .window-controls__btn--close {
+    background: linear-gradient(to bottom, var(--xp-control-close-top), var(--xp-control-close-bottom));
+  }
+
+  .window-controls__btn:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 1px;
+  }
+</style>

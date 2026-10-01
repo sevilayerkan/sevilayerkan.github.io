@@ -1,0 +1,127 @@
+---
+import XPWindow from "./XPWindow.astro";
+import XPButton from "./XPButton.astro";
+import { emailHref, professionalLinks } from "../../config/site";
+import { getLocaleFromPath, localizeHref, ui } from "../../i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale).contact;
+const socials = professionalLinks().filter((item) => item.key !== "email");
+---
+
+<XPWindow title={t.homeTitle}>
+  <div class="home-contact">
+    <div>
+      <p class="home-contact__eyebrow">{t.homeEyebrow}</p>
+      <h2>{t.homeHeading}</h2>
+      <p>
+        {t.homeBody}
+      </p>
+    </div>
+
+    <div class="home-contact__actions">
+      <XPButton href={emailHref()} variant="primary">
+        {t.emailMe}
+      </XPButton>
+      <XPButton href={localizeHref(locale, "/contact")}>
+        {t.contactPage}
+      </XPButton>
+      <ul class="home-contact__social">
+        {
+          socials.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t[item.key]}
+                <span class="visually-hidden"> {t.newTab}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</XPWindow>
+
+<style>
+  .home-contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 26px;
+    padding: 4px;
+  }
+
+  .home-contact > div:first-child {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .home-contact__eyebrow {
+    margin: 0 0 7px;
+    color: var(--xp-status-good);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .home-contact h2 {
+    max-width: 640px;
+    margin: 0 0 10px;
+    font-size: clamp(22px, 4vw, 34px);
+    line-height: 1.1;
+  }
+
+  .home-contact p:last-child {
+    max-width: 640px;
+    margin: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.6;
+  }
+
+  .home-contact__actions {
+    display: grid;
+    flex: 0 0 auto;
+    align-self: center;
+    gap: 8px;
+    min-width: min(100%, 180px);
+  }
+
+  .home-contact__actions :global(.xp-button) {
+    width: 100%;
+  }
+
+  .home-contact__social {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 12px;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+  }
+
+  .home-contact__social a {
+    color: var(--xp-link);
+    font-weight: 700;
+  }
+
+  .home-contact__social a:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .home-contact {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .home-contact__actions {
+      width: 100%;
+    }
+  }
+</style>

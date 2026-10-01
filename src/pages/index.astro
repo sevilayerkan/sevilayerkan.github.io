@@ -1,0 +1,37 @@
+---
+import { siteConfig } from "../config/site";
+import { defaultLocale } from "../i18n";
+import { localePageUrl } from "../lib/seo";
+
+const defaultHome = localePageUrl(defaultLocale, "/");
+const enHome = localePageUrl("en", "/");
+const trHome = localePageUrl("tr", "/");
+---
+
+<!doctype html>
+<html lang={defaultLocale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{siteConfig.name}</title>
+    <meta name="description" content={siteConfig.defaultDescription} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={defaultHome} />
+    <link rel="alternate" hreflang="en" href={enHome} />
+    <link rel="alternate" hreflang="tr" href={trHome} />
+    <link rel="alternate" hreflang="x-default" href={defaultHome} />
+    <meta http-equiv="refresh" content={`0; url=/${defaultLocale}/`} />
+    <script is:inline>
+      (function () {
+        var locale = "tr";
+        try {
+          var stored = localStorage.getItem("xp-locale");
+          if (stored === "en" || stored === "tr") locale = stored;
+        } catch (error) {}
+        location.replace("/" + locale + "/");
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

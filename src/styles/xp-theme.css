@@ -1,0 +1,234 @@
+:root,
+html[data-theme="xp-light"] {
+  color-scheme: light;
+
+  --xp-blue: #245edb;
+  --xp-blue-light: #3c8cf3;
+  --xp-blue-dark: #0c3a9e;
+  --xp-green: #3c9a31;
+  --xp-green-light: #63b64f;
+
+  --xp-window-bg: #ece9d8;
+  --xp-content-bg: #ffffff;
+  --xp-border-light: #ffffff;
+  --xp-border-mid: #aca899;
+  --xp-border-dark: #003c74;
+  --xp-text: #1f1f1f;
+  --xp-muted-text: #5c5c5c;
+
+  --xp-html-bg: #5a8fd8;
+  --xp-desktop-top: #6fa6ea;
+  --xp-desktop-mid: #4c8fdc;
+  --xp-desktop-bottom: #3f8f38;
+
+  --xp-titlebar-text: #ffffff;
+  --xp-link: #0b3d91;
+  --xp-heading: #1b4f9c;
+  --xp-heading-strong: #163a78;
+  --xp-caption: #1a4c95;
+
+  --xp-panel: #f5f3ea;
+  --xp-panel-border: #bcb8aa;
+  --xp-hairline: #ece9df;
+  --xp-rule: #d3d0c4;
+  --xp-list-hover: #eaf2fd;
+  --xp-list-stripe: #fafafa;
+  --xp-input-border: #7f9db9;
+  --xp-chip-bg: #eef4fb;
+  --xp-chip-text: #1c4f9b;
+
+  --xp-nav-hover-bg: #dfe8f6;
+  --xp-nav-hover-border: #7f9db9;
+  --xp-nav-menu-edge: rgb(255 255 255 / 0.75);
+
+  --xp-button-top: #ffffff;
+  --xp-button-bottom: #ece9d8;
+  --xp-button-text: #111111;
+  --xp-button-hover-ring: #e59700;
+  --xp-focus: #000000;
+  --xp-focus-on-blue: #ffffff;
+  --xp-skip-bg: #ffffff;
+  --xp-skip-text: #111111;
+
+  --xp-dialog-backdrop: rgb(0 0 0 / 0.28);
+  --xp-window-shadow: 0 5px 18px rgb(0 0 0 / 0.22);
+  --xp-dialog-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+
+  --xp-taskbar-top: #2d73e1;
+  --xp-taskbar-mid: #245edb;
+  --xp-taskbar-bottom: #1748a4;
+  --xp-taskbar-edge: #4b8ef0;
+  --xp-taskbar-text: #ffffff;
+  --xp-start-top: #65b94d;
+  --xp-start-mid: #3b9634;
+  --xp-start-bottom: #2e7b29;
+  --xp-task-active-bg: #2c66c9;
+  --xp-task-active-border: #12429b;
+  --xp-tray-bg: #1594e8;
+  --xp-tray-border: #0b70c0;
+
+  --xp-control-top: #6da6f1;
+  --xp-control-bottom: #1e5dcc;
+  --xp-control-close-top: #f58b6f;
+  --xp-control-close-bottom: #d64221;
+
+  --xp-status-good: #2f7d32;
+  --xp-status-warn: #9a2f14;
+  --xp-status-idle: #5f5f5f;
+  --xp-check-mark: #1e5c22;
+
+  --xp-explorer-sidebar: linear-gradient(to bottom, #7ba3e5, #6375c8);
+  --xp-explorer-heading: linear-gradient(to right, #ffffff, #d9e6fb);
+  --xp-explorer-blue: #164da3;
+  --xp-explorer-blue-mid: #1f4f9d;
+  --xp-statusbar-border: #c4c0b1;
+  --xp-tab-inactive: #ddd9c9;
+  --xp-row-divider: #dedbd1;
+
+  --xp-sidebar-from: #f4f7fb;
+  --xp-sidebar-to: #d8e6f8;
+  --xp-sidebar-border: #b8c7d9;
+  --xp-monitor-bezel: #d8d8d0;
+  --xp-monitor-inset: #7b7b73;
+  --xp-monitor-stand: #c8c8be;
+  --xp-monitor-stand-shadow: #a9a99f;
+
+  --xp-code-bg: #f7f5ee;
+  --xp-contact-card: linear-gradient(to bottom, #ffffff, #f7f5ee);
+
+  --xp-stream-live-bg: #e7f4e4;
+  --xp-stream-live-border: #2f7d32;
+  --xp-stream-live-text: #1e5c22;
+  --xp-stream-soon-bg: #fff8dc;
+  --xp-stream-soon-border: #c9a227;
+  --xp-stream-soon-text: #6b5710;
+
+  --xp-bsod-bg: #0a24a8;
+  --xp-bsod-banner-bg: #c0c0c0;
+  --xp-bsod-banner-text: #0a24a8;
+  --xp-bsod-muted: #d7e4ff;
+
+  --xp-theme-color: #245edb;
+
+  --xp-shadow:
+    1px 1px 0 rgb(255 255 255 / 0.7) inset,
+    -1px -1px 0 rgb(0 0 0 / 0.18) inset;
+
+  --xp-radius: 6px;
+}
+
+html[data-theme="xp-dark"] {
+  color-scheme: dark;
+
+  --xp-blue: #1e56b8;
+  --xp-blue-light: #3a78d4;
+  --xp-blue-dark: #0a2c70;
+  --xp-green: #4aa43f;
+  --xp-green-light: #68bc55;
+
+  --xp-window-bg: #3c3b36;
+  --xp-content-bg: #2b2a26;
+  --xp-border-light: #5e5d56;
+  --xp-border-mid: #1c1b18;
+  --xp-border-dark: #7aa3d9;
+  --xp-text: #f3f0e6;
+  --xp-muted-text: #b8b4a8;
+
+  --xp-html-bg: #1c335c;
+  --xp-desktop-top: #243e6e;
+  --xp-desktop-mid: #1b335c;
+  --xp-desktop-bottom: #1a3d24;
+
+  --xp-titlebar-text: #ffffff;
+  --xp-link: #9ec8ff;
+  --xp-heading: #b7d4ff;
+  --xp-heading-strong: #cde0ff;
+  --xp-caption: #c5dbff;
+
+  --xp-panel: #34332f;
+  --xp-panel-border: #5a584f;
+  --xp-hairline: #44433e;
+  --xp-rule: #55544c;
+  --xp-list-hover: #2a3f5c;
+  --xp-list-stripe: #32312c;
+  --xp-input-border: #6d8eb5;
+  --xp-chip-bg: #2f3f55;
+  --xp-chip-text: #c5dbff;
+
+  --xp-nav-hover-bg: #3a4d68;
+  --xp-nav-hover-border: #6d8eb5;
+  --xp-nav-menu-edge: rgb(255 255 255 / 0.12);
+
+  --xp-button-top: #5a5953;
+  --xp-button-bottom: #3c3b36;
+  --xp-button-text: #f3f0e6;
+  --xp-button-hover-ring: #e59700;
+  --xp-focus: #f2d060;
+  --xp-focus-on-blue: #ffffff;
+  --xp-skip-bg: #2b2a26;
+  --xp-skip-text: #f3f0e6;
+
+  --xp-dialog-backdrop: rgb(0 0 0 / 0.48);
+  --xp-window-shadow: 0 5px 18px rgb(0 0 0 / 0.45);
+  --xp-dialog-shadow: 0 8px 24px rgb(0 0 0 / 0.5);
+
+  --xp-taskbar-top: #1c4aa8;
+  --xp-taskbar-mid: #163d90;
+  --xp-taskbar-bottom: #0e2a68;
+  --xp-taskbar-edge: #3a6ec8;
+  --xp-taskbar-text: #ffffff;
+  --xp-start-top: #4ea03c;
+  --xp-start-mid: #2f7a2a;
+  --xp-start-bottom: #246222;
+  --xp-task-active-bg: #1d4a9a;
+  --xp-task-active-border: #0c2d6e;
+  --xp-tray-bg: #0e6cb0;
+  --xp-tray-border: #085888;
+
+  --xp-control-top: #5a96e0;
+  --xp-control-bottom: #184ea8;
+  --xp-control-close-top: #e07a62;
+  --xp-control-close-bottom: #b83820;
+
+  --xp-status-good: #7dce7a;
+  --xp-status-warn: #e08a72;
+  --xp-status-idle: #c4c0b4;
+  --xp-check-mark: #9ee09a;
+
+  --xp-explorer-sidebar: linear-gradient(to bottom, #2a4a7a, #1e3560);
+  --xp-explorer-heading: linear-gradient(to right, #2b2a26, #2a3f5c);
+  --xp-explorer-blue: #9ec8ff;
+  --xp-explorer-blue-mid: #b7d4ff;
+  --xp-statusbar-border: #5a584f;
+  --xp-tab-inactive: #33322e;
+  --xp-row-divider: #4a4943;
+
+  --xp-sidebar-from: #2c3544;
+  --xp-sidebar-to: #24324a;
+  --xp-sidebar-border: #3d4e66;
+  --xp-monitor-bezel: #4a4943;
+  --xp-monitor-inset: #2a2925;
+  --xp-monitor-stand: #4a4943;
+  --xp-monitor-stand-shadow: #2a2925;
+
+  --xp-code-bg: #34332f;
+  --xp-contact-card: linear-gradient(to bottom, #2b2a26, #34332f);
+
+  --xp-stream-live-bg: #243a28;
+  --xp-stream-live-border: #4aa43f;
+  --xp-stream-live-text: #9ee09a;
+  --xp-stream-soon-bg: #3a3520;
+  --xp-stream-soon-border: #c9a227;
+  --xp-stream-soon-text: #e8d48a;
+
+  --xp-bsod-bg: #081c7a;
+  --xp-bsod-banner-bg: #c0c0c0;
+  --xp-bsod-banner-text: #081c7a;
+  --xp-bsod-muted: #c5d4ff;
+
+  --xp-theme-color: #163d90;
+
+  --xp-shadow:
+    1px 1px 0 rgb(255 255 255 / 0.12) inset,
+    -1px -1px 0 rgb(0 0 0 / 0.4) inset;
+}

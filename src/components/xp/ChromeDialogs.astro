@@ -1,0 +1,41 @@
+---
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+
+const dialogs = [
+  {
+    id: "chrome-minimize",
+    title: t.chrome.minimizeTitle,
+    body: t.chrome.minimizeBody,
+  },
+  {
+    id: "chrome-maximize",
+    title: t.chrome.maximizeTitle,
+    body: t.chrome.maximizeBody,
+  },
+  {
+    id: "chrome-close",
+    title: t.chrome.closeTitle,
+    body: t.chrome.closeBody,
+  },
+  {
+    id: "chrome-menu",
+    title: t.chrome.menuTitle,
+    body: t.chrome.menuBody,
+  },
+];
+---
+
+{
+  dialogs.map((dialog) => (
+    <XPDialog id={dialog.id} title={dialog.title} size="sm">
+      <p>{dialog.body}</p>
+      <XPButton slot="footer" dialogClose>
+        {t.common.ok}
+      </XPButton>
+    </XPDialog>
+  ))
+}

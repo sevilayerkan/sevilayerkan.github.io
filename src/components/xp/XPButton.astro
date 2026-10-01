@@ -1,0 +1,101 @@
+---
+interface Props {
+  href?: string;
+  variant?: "default" | "primary";
+  external?: boolean;
+  dialogClose?: boolean;
+  themeAction?: "ok" | "cancel" | "apply";
+  localeAction?: "ok" | "cancel" | "apply";
+  submit?: boolean;
+  form?: string;
+}
+
+const {
+  href,
+  variant = "default",
+  external = false,
+  dialogClose = false,
+  themeAction,
+  localeAction,
+  submit = false,
+  form,
+} = Astro.props;
+
+const classes = [
+  "xp-button",
+  `xp-button--${variant}`,
+].join(" ");
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={classes}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      class={classes}
+      type={submit ? "submit" : "button"}
+      form={form}
+      data-xp-dialog-close={dialogClose ? "" : undefined}
+      data-theme-ok={themeAction === "ok" ? "" : undefined}
+      data-theme-cancel={themeAction === "cancel" ? "" : undefined}
+      data-theme-apply={themeAction === "apply" ? "" : undefined}
+      data-locale-ok={localeAction === "ok" ? "" : undefined}
+      data-locale-cancel={localeAction === "cancel" ? "" : undefined}
+      data-locale-apply={localeAction === "apply" ? "" : undefined}
+    >
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .xp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 6px 16px;
+    border: 1px solid var(--xp-border-dark);
+    border-radius: 3px;
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-button-top),
+        var(--xp-button-bottom)
+      );
+    color: var(--xp-button-text);
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow:
+      inset 1px 1px 0 var(--xp-border-light),
+      inset -1px -1px 0 var(--xp-border-mid);
+  }
+
+  .xp-button:hover {
+    outline: 1px solid var(--xp-button-hover-ring);
+    outline-offset: -4px;
+  }
+
+  .xp-button:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 1px 1px 2px
+      rgb(0 0 0 / 0.35);
+  }
+
+  .xp-button--primary {
+    font-weight: 700;
+  }
+
+  .xp-button:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+</style>

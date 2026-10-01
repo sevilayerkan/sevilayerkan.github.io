@@ -1,0 +1,123 @@
+---
+import { getLocaleFromPath, ui } from "../../i18n";
+
+interface Props {
+  title: string;
+  category: string;
+  description: string;
+  date?: string;
+  status: "Live" | "Archived" | "Planned";
+  href?: string;
+}
+
+const { title, category, description, date, status, href } = Astro.props;
+const t = ui(getLocaleFromPath(Astro.url.pathname)).streams;
+const statusLabel =
+  status === "Live" ? t.live : status === "Planned" ? t.planned : t.archived;
+---
+
+<article class="stream-card">
+  <div class="stream-card__meta">
+    <span>{category}</span>
+    <span
+      class:list={[
+        "stream-card__status",
+        {
+          "stream-card__status--live": status === "Live",
+          "stream-card__status--planned": status === "Planned",
+        },
+      ]}
+    >
+      {statusLabel}
+    </span>
+  </div>
+
+  <h3>{title}</h3>
+  <p>{description}</p>
+
+  <div class="stream-card__footer">
+    {date ? <time>{date}</time> : <span>{t.dateTba}</span>}
+    {
+      href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {t.openStream}
+          <span class="visually-hidden"> {t.newTab}</span>
+        </a>
+      ) : (
+        <span>{t.linkSoon}</span>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .stream-card {
+    height: 100%;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 4px 2px;
+  }
+
+  .stream-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .stream-card__meta span,
+  .stream-card__status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 3px 9px;
+    border: 1px solid var(--xp-input-border);
+    background: var(--xp-chip-bg);
+    font-size: 12px;
+  }
+
+  .stream-card__status--live {
+    border-color: var(--xp-stream-live-border);
+    background: var(--xp-stream-live-bg);
+    color: var(--xp-stream-live-text);
+  }
+
+  .stream-card__status--planned {
+    border-color: var(--xp-stream-soon-border);
+    background: var(--xp-stream-soon-bg);
+    color: var(--xp-stream-soon-text);
+  }
+
+  .stream-card h3 {
+    margin: 0;
+    color: var(--xp-link);
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .stream-card p {
+    margin: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.6;
+  }
+
+  .stream-card__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+    color: var(--xp-muted-text);
+    font-size: 12px;
+  }
+
+  .stream-card__footer a {
+    color: var(--xp-link);
+    font-weight: 700;
+  }
+
+  .stream-card__footer a:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+</style>

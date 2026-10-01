@@ -1,0 +1,308 @@
+---
+import { render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import XPWindow from "../../../components/xp/XPWindow.astro";
+import XPButton from "../../../components/xp/XPButton.astro";
+import {
+  getPostSlug,
+  getPostsByTranslationKey,
+  getPublishedPosts,
+  getReadingTime,
+  hrefsByLocale,
+  postLocale,
+  translationLocales,
+  type BlogPost,
+} from "../../../lib/blog";
+import {
+  formatDate,
+  formatReadingTime,
+  isLocale,
+  localeLabels,
+  localizeHref,
+  ui,
+} from "../../../i18n";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+
+  return posts.map((post) => ({
+    params: {
+      lang: postLocale(post),
+      slug: getPostSlug(post),
+    },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const lang = isLocale(Astro.params.lang) ? Astro.params.lang : postLocale(post);
+const t = ui(lang);
+const { Content } = await render(post);
+const readingTime = getReadingTime(post);
+const canonicalUrl = post.data.canonicalUrl;
+const coverImage = post.data.cover?.src;
+const translations = post.data.translationKey
+  ? await getPostsByTranslationKey(post.data.translationKey)
+  : [post];
+const localeHrefs = hrefsByLocale(translations);
+const counterpart = translations.find((entry) => postLocale(entry) !== lang);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonicalUrl={canonicalUrl}
+  ogImage={coverImage}
+  ogType="article"
+  publishedTime={post.data.publishDate}
+  updatedTime={post.data.updatedDate}
+  availableLocales={translationLocales(translations)}
+  localeHrefs={localeHrefs}
+  localeFallback="/blog"
+>
+  <article class="post-page">
+    <XPWindow title={`${post.data.title}.txt`}>
+      <div class="post">
+        <p class="post__eyebrow">{post.data.category}</p>
+        <h1>{post.data.title}</h1>
+        {
+          counterpart ? (
+            <p class="post__i18n">
+              <a href={localeHrefs[postLocale(counterpart)]}>
+                {t.notes.alsoIn} {localeLabels[postLocale(counterpart)]}
+              </a>
+            </p>
+          ) : null
+        }
+        {
+          post.data.originalUrl ? (
+            <p class="post__source">
+              <a
+                href={post.data.originalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.notes.originallyMedium}
+                <span class="visually-hidden"> {t.contact.newTab}</span>
+              </a>
+            </p>
+          ) : null
+        }
+        <p class="post__description">{post.data.description}</p>
+
+        <dl class="post__meta">
+          <div>
+            <dt>{t.notes.published}</dt>
+            <dd>
+              <time datetime={post.data.publishDate.toISOString()}>
+                {formatDate(post.data.publishDate, lang)}
+              </time>
+            </dd>
+          </div>
+
+          {
+            post.data.updatedDate ? (
+              <div>
+                <dt>{t.notes.updated}</dt>
+                <dd>
+                  <time datetime={post.data.updatedDate.toISOString()}>
+                    {formatDate(post.data.updatedDate, lang)}
+                  </time>
+                </dd>
+              </div>
+            ) : null
+          }
+
+          <div>
+            <dt>{t.notes.readingTime}</dt>
+            <dd>
+              {formatReadingTime(readingTime, lang)}
+            </dd>
+          </div>
+        </dl>
+
+        {
+          post.data.tags.length > 0 ? (
+            <ul class="post__tags">
+              {post.data.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          ) : null
+        }
+
+        {
+          post.data.cover ? (
+            <img
+              class="post__cover"
+              src={post.data.cover.src}
+              alt=""
+              width={post.data.cover.width}
+              height={post.data.cover.height}
+            />
+          ) : null
+        }
+
+        <div class="post__body">
+          <Content />
+        </div>
+
+        <div class="post__actions">
+          <XPButton href={localizeHref(lang, "/blog")}>{t.notes.back}</XPButton>
+        </div>
+      </div>
+    </XPWindow>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-page {
+    padding-bottom: 40px;
+  }
+
+  .post {
+    max-width: 760px;
+    margin-inline: auto;
+    padding: 8px clamp(2px, 3vw, 20px) 4px;
+  }
+
+  .post__eyebrow {
+    margin: 0 0 8px;
+    color: var(--xp-heading);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .post h1 {
+    margin: 0 0 12px;
+    font-size: clamp(26px, 5vw, 40px);
+    line-height: 1.15;
+  }
+
+  .post__i18n,
+  .post__source {
+    margin: 0 0 10px;
+    font-size: 13px;
+  }
+
+  .post__i18n a,
+  .post__source a {
+    color: var(--xp-link);
+  }
+
+  .post__description {
+    margin: 0 0 18px;
+    color: var(--xp-muted-text);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    margin: 0 0 16px;
+  }
+
+  .post__meta div {
+    margin: 0;
+  }
+
+  .post__meta dt {
+    color: var(--xp-muted-text);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .post__meta dd {
+    margin: 2px 0 0;
+    font-size: 13px;
+  }
+
+  .post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0 0 22px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post__tags li {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 3px 9px;
+    border: 1px solid var(--xp-input-border);
+    background: var(--xp-chip-bg);
+    font-size: 12px;
+  }
+
+  .post__cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 24px;
+    border: 1px solid var(--xp-rule);
+  }
+
+  .post__body {
+    padding-top: 8px;
+    border-top: 1px solid var(--xp-rule);
+    color: var(--xp-text);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .post__body :global(h2),
+  .post__body :global(h3) {
+    margin: 1.6em 0 0.55em;
+    color: var(--xp-heading-strong);
+    line-height: 1.3;
+  }
+
+  .post__body :global(h2) {
+    font-size: 1.25em;
+  }
+
+  .post__body :global(h3) {
+    font-size: 1.08em;
+  }
+
+  .post__body :global(p),
+  .post__body :global(ul) {
+    margin: 0 0 1em;
+  }
+
+  .post__body :global(ul) {
+    padding-left: 1.2em;
+  }
+
+  .post__body :global(li + li) {
+    margin-top: 0.35em;
+  }
+
+  .post__body :global(code) {
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--xp-rule);
+    background: var(--xp-code-bg);
+    font-size: 0.86em;
+  }
+
+  .post__body :global(a) {
+    color: var(--xp-link);
+  }
+
+  .post__actions {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--xp-rule);
+  }
+</style>

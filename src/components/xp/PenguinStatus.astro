@@ -1,0 +1,45 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label = "penguin.exe is running" } = Astro.props;
+---
+
+<button
+  class="penguin-status"
+  type="button"
+  title={label}
+  aria-label={label}
+  aria-haspopup="dialog"
+  aria-controls="xp-console"
+  data-xp-dialog-open="xp-console"
+>
+  <span aria-hidden="true">🐧</span>
+</button>
+
+<style>
+  .penguin-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 2px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .penguin-status:hover {
+    border-color: rgb(255 255 255 / 0.45);
+    background: rgb(0 0 0 / 0.12);
+  }
+
+  .penguin-status:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 1px;
+  }
+</style>

@@ -1,0 +1,224 @@
+---
+import XPWindow from "./XPWindow.astro";
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+const tm = t.taskManager;
+
+const tasks = [
+  { name: tm.tasks[0], status: tm.running },
+  { name: tm.tasks[1], status: tm.running },
+  { name: tm.tasks[2], status: tm.running },
+  { name: tm.tasks[3], status: tm.notResponding },
+];
+
+const tabs = [
+  {
+    id: "task-tab-applications",
+    label: tm.applications,
+    active: true,
+    title: tm.applications,
+    body: tm.applicationsBody,
+  },
+  {
+    id: "task-tab-processes",
+    label: tm.processesTab,
+    active: false,
+    title: tm.processesTab,
+    body: tm.processesBody,
+  },
+  {
+    id: "task-tab-performance",
+    label: tm.performance,
+    active: false,
+    title: tm.performance,
+    body: tm.performanceBody,
+  },
+];
+---
+
+<XPWindow title={tm.title}>
+  <div class="task-manager">
+    <div class="task-manager__tabs">
+      {
+        tabs.map((tab) => (
+          <button
+            class:list={[
+              "task-manager__tab",
+              { "task-manager__tab--active": tab.active },
+            ]}
+            type="button"
+            data-xp-dialog-open={tab.id}
+            aria-haspopup="dialog"
+            aria-controls={tab.id}
+          >
+            {tab.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="task-manager__table">
+      <div class="task-manager__header">
+        <span>{tm.task}</span>
+        <span>{tm.status}</span>
+      </div>
+
+      {
+        tasks.map((task) => (
+          <div class="task-manager__row">
+            <span>{task.name}</span>
+            <span
+              class:list={[
+                "task-manager__status",
+                {
+                  "task-manager__status--warning":
+                    task.status === tm.notResponding,
+                },
+              ]}
+            >
+              {task.status}
+            </span>
+          </div>
+        ))
+      }
+
+      <div class="task-manager__row task-manager__row--easter">
+        <span>penguin.exe</span>
+        <span class="task-manager__status">{tm.running}</span>
+      </div>
+    </div>
+
+    <div class="task-manager__footer">
+      <span>{tm.processes}</span>
+      <span>{tm.cpu}</span>
+    </div>
+  </div>
+</XPWindow>
+
+{
+  tabs.map((tab) => (
+    <XPDialog id={tab.id} title={tab.title} size="sm">
+      <p>{tab.body}</p>
+      <XPButton slot="footer" dialogClose>
+        {t.common.ok}
+      </XPButton>
+    </XPDialog>
+  ))
+}
+
+<style>
+  .task-manager {
+    margin: -22px;
+    background: var(--xp-window-bg);
+  }
+
+  .task-manager__tabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 8px 0;
+  }
+
+  .task-manager__tab {
+    padding: 6px 12px;
+    border: 1px solid var(--xp-border-mid);
+    border-bottom: 0;
+    background: var(--xp-tab-inactive);
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .task-manager__tab:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 1px;
+  }
+
+  .task-manager__tab--active {
+    position: relative;
+    top: 1px;
+    background: var(--xp-content-bg);
+    font-weight: 700;
+  }
+
+  .task-manager__table {
+    margin: 0 8px;
+    border: 1px solid var(--xp-input-border);
+    background: var(--xp-content-bg);
+  }
+
+  .task-manager__header,
+  .task-manager__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    align-items: center;
+  }
+
+  .task-manager__header {
+    background: var(--xp-panel);
+    border-bottom: 1px solid var(--xp-border-mid);
+    color: var(--xp-muted-text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .task-manager__header span,
+  .task-manager__row span {
+    padding: 7px 9px;
+  }
+
+  .task-manager__header span:first-child,
+  .task-manager__row span:first-child {
+    border-right: 1px solid var(--xp-row-divider);
+  }
+
+  .task-manager__row {
+    min-height: 34px;
+    font-size: 13px;
+  }
+
+  .task-manager__row:nth-child(even) {
+    background: var(--xp-list-stripe);
+  }
+
+  .task-manager__status {
+    color: var(--xp-status-good);
+    font-weight: 700;
+  }
+
+  .task-manager__status--warning {
+    color: var(--xp-status-warn);
+  }
+
+  .task-manager__row--easter {
+    color: var(--xp-status-idle);
+  }
+
+  .task-manager__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 10px;
+    color: var(--xp-muted-text);
+    font-size: 11px;
+  }
+
+  @media (max-width: 560px) {
+    .task-manager {
+      margin: -18px;
+    }
+
+    .task-manager__header,
+    .task-manager__row {
+      grid-template-columns: minmax(0, 1fr) 110px;
+    }
+
+    .task-manager__footer {
+      flex-direction: column;
+      gap: 3px;
+    }
+  }
+</style>

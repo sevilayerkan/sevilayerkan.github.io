@@ -1,0 +1,150 @@
+---
+import { defaultLocale, localizeHref, ui } from "../../i18n";
+import { en } from "../../i18n/en";
+import { tr } from "../../i18n/tr";
+
+const t = ui(defaultLocale).errors;
+const homeHref = localizeHref(defaultLocale, "/");
+
+const packs = {
+  en: {
+    ...en.errors,
+    ok: en.common.ok,
+    homeHref: localizeHref("en", "/"),
+  },
+  tr: {
+    ...tr.errors,
+    ok: tr.common.ok,
+    homeHref: localizeHref("tr", "/"),
+  },
+};
+---
+
+<div class="bsod" data-bsod>
+  <a class="skip-link" href="#bsod-home" data-bsod-field="skip">
+    {t.skipToHome}
+  </a>
+
+  <p class="bsod__banner" data-bsod-field="banner">{t.banner}</p>
+
+  <h1 data-bsod-field="heading">{t.heading}</h1>
+  <p data-bsod-field="message">{t.message}</p>
+
+  <p class="bsod__tech-heading" data-bsod-field="technicalHeading">
+    {t.technicalHeading}
+  </p>
+  <p data-bsod-field="stop">{t.stop}</p>
+  <p data-bsod-field="technical">{t.technical}</p>
+
+  <div class="bsod__mascot">
+    <slot />
+  </div>
+
+  <p class="bsod__recovery" data-bsod-field="recovery">{t.recovery}</p>
+
+  <p class="bsod__action">
+    <a class="bsod__home" id="bsod-home" data-bsod-home data-bsod-field="home" href={homeHref}>
+      {t.home}
+    </a>
+  </p>
+</div>
+
+<script is:inline type="application/json" id="xp-error-copy" set:html={JSON.stringify(packs)}></script>
+
+<script>
+  import "../../scripts/error-page";
+</script>
+
+<style>
+  .bsod {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 14px;
+    padding: 28px clamp(16px, 5vw, 72px);
+    overflow-x: hidden;
+    position: relative;
+    color: var(--xp-titlebar-text);
+    font-family: "Lucida Console", Consolas, "Courier New", monospace;
+    font-size: clamp(14px, 2.6vw, 18px);
+    line-height: 1.55;
+  }
+
+  .bsod p,
+  .bsod h1,
+  .bsod a {
+    max-width: min(46rem, 100%);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .bsod h1 {
+    font-size: inherit;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .bsod__banner {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 2px 10px;
+    background: var(--xp-bsod-banner-bg);
+    color: var(--xp-bsod-banner-text);
+    font-weight: 700;
+  }
+
+  .bsod__tech-heading {
+    margin-top: 10px;
+  }
+
+  .bsod__mascot {
+    margin: 8px 0 2px;
+  }
+
+  .bsod__recovery {
+    color: var(--xp-bsod-muted);
+  }
+
+  .bsod__action {
+    margin-top: 6px;
+  }
+
+  .bsod__home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 6px 16px;
+    border: 2px solid var(--xp-titlebar-text);
+    background: var(--xp-bsod-banner-bg);
+    color: var(--xp-bsod-banner-text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .bsod__home:hover {
+    filter: brightness(1.06);
+  }
+
+  .bsod__home:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 560px) {
+    .bsod {
+      padding: 20px 16px 32px;
+      font-size: 14px;
+    }
+
+    .bsod__home {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+</style>

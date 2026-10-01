@@ -1,0 +1,133 @@
+---
+import XPWindow from "./XPWindow.astro";
+import XPButton from "./XPButton.astro";
+import { getLatestPosts, getPostHref } from "../../lib/blog";
+import {
+  formatDate,
+  getLocaleFromPath,
+  interpolate,
+  localizeHref,
+  ui,
+} from "../../i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale);
+const posts = await getLatestPosts(3, locale);
+---
+
+<XPWindow title={t.notes.title}>
+  <div class="notes">
+    <div class="notes__toolbar">
+      <span>{t.notes.name}</span>
+      <span>{t.notes.category}</span>
+      <span>{t.notes.date}</span>
+    </div>
+
+    <div class="notes__list">
+      {
+        posts.map((post) => (
+          <a class="notes__row" href={getPostHref(post)}>
+            <span class="notes__title">
+              <span aria-hidden="true">📄</span>
+              {post.data.title}
+            </span>
+            <span>{post.data.category}</span>
+            <span>{formatDate(post.data.publishDate, locale)}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="notes__footer">
+      <span>{interpolate(t.explorer.items, { n: posts.length })}</span>
+      <XPButton href={localizeHref(locale, "/blog")}>{t.notes.viewAll}</XPButton>
+    </div>
+  </div>
+</XPWindow>
+
+<style>
+  .notes {
+    margin: -22px;
+    background: var(--xp-content-bg);
+  }
+
+  .notes__toolbar,
+  .notes__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(120px, .7fr) 120px;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .notes__toolbar {
+    padding: 7px 12px;
+    background: var(--xp-panel);
+    border-bottom: 1px solid var(--xp-panel-border);
+    color: var(--xp-muted-text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .notes__row {
+    padding: 12px;
+    border-bottom: 1px solid var(--xp-hairline);
+    color: var(--xp-text);
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .notes__row:hover,
+  .notes__row:focus-visible {
+    background: var(--xp-list-hover);
+    outline: none;
+  }
+
+  .notes__title {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--xp-link);
+    font-weight: 700;
+  }
+
+  .notes__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 10px;
+    background: var(--xp-panel);
+    color: var(--xp-muted-text);
+    font-size: 11px;
+  }
+
+  @media (max-width: 680px) {
+    .notes {
+      margin: -18px;
+    }
+
+    .notes__toolbar {
+      display: none;
+    }
+
+    .notes__row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .notes__row > span:not(.notes__title) {
+      color: var(--xp-muted-text);
+      font-size: 12px;
+    }
+
+    .notes__footer {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .notes__footer :global(.xp-button) {
+      width: 100%;
+    }
+  }
+</style>

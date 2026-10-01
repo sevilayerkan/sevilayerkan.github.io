@@ -1,0 +1,170 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import XPWindow from "../../components/xp/XPWindow.astro";
+import XPButton from "../../components/xp/XPButton.astro";
+import { projects } from "../../data/projects";
+import {
+  isLocale,
+  localeStaticPaths,
+  localizeHref,
+  ui,
+} from "../../i18n";
+
+export const getStaticPaths = (() => localeStaticPaths()) satisfies GetStaticPaths;
+
+const lang = isLocale(Astro.params.lang) ? Astro.params.lang : "en";
+const t = ui(lang);
+---
+
+<BaseLayout
+  title={t.projectsPage.title}
+  description={t.projectsPage.metaDescription}
+>
+  <div class="page-stack projects-page">
+    <XPWindow title={t.projectsPage.windowTitle}>
+      <div class="projects-page__intro">
+        <p class="projects-page__eyebrow">{t.projectsPage.eyebrow}</p>
+        <h1>{t.projectsPage.heading}</h1>
+        <p>{t.projectsPage.intro}</p>
+      </div>
+    </XPWindow>
+
+    <div class="projects-page__grid">
+      {
+        projects.map((project) => (
+          <article id={project.id}>
+            <XPWindow title={`${project.icon} ${project.title}`}>
+              <div class="project-detail">
+                <div class="project-detail__meta">
+                  <span>{project.type}</span>
+                  <span>
+                    {t.projectsPage.status}:{" "}
+                    {t.projectStatus[project.status as keyof typeof t.projectStatus] ??
+                      project.status}
+                  </span>
+                </div>
+
+                <p class="project-detail__summary">{project.summary}</p>
+
+                <div class="project-detail__section">
+                  <h2>{t.projectsPage.problem}</h2>
+                  <p>{project.problem}</p>
+                </div>
+
+                <div class="project-detail__section">
+                  <h2>{t.projectsPage.built}</h2>
+                  <p>{project.built}</p>
+                </div>
+
+                <div class="project-detail__section">
+                  <h2>{t.projectsPage.stack}</h2>
+                  <div class="project-detail__tags">
+                    {
+                      project.stack.map((item) => (
+                        <span>{item}</span>
+                      ))
+                    }
+                  </div>
+                </div>
+
+                <div class="project-detail__actions">
+                  <XPButton href={localizeHref(lang, "/contact")}>
+                    {t.projectsPage.ask}
+                  </XPButton>
+                </div>
+              </div>
+            </XPWindow>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .projects-page__intro {
+    padding: 8px clamp(2px, 3vw, 24px);
+  }
+
+  .projects-page__eyebrow {
+    margin: 0 0 8px;
+    color: var(--xp-heading);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .projects-page__intro h1 {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.05;
+  }
+
+  .projects-page__intro p:last-child {
+    max-width: 720px;
+    margin-bottom: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.65;
+  }
+
+  .projects-page__grid {
+    display: grid;
+    gap: 28px;
+  }
+
+  .project-detail {
+    padding: 4px;
+  }
+
+  .project-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .project-detail__meta span,
+  .project-detail__tags span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 3px 9px;
+    border: 1px solid var(--xp-input-border);
+    background: var(--xp-chip-bg);
+    font-size: 12px;
+  }
+
+  .project-detail__summary {
+    max-width: 780px;
+    color: var(--xp-muted-text);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .project-detail__section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--xp-rule);
+  }
+
+  .project-detail__section h2 {
+    margin: 0 0 8px;
+    color: var(--xp-chip-text);
+    font-size: 16px;
+  }
+
+  .project-detail__section p {
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  .project-detail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .project-detail__actions {
+    margin-top: 24px;
+  }
+</style>

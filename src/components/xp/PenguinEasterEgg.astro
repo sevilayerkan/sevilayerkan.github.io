@@ -1,0 +1,115 @@
+---
+import { defaultLocale, ui } from "../../i18n";
+
+const t = ui(defaultLocale);
+---
+
+<button
+  class="penguin-egg__mascot"
+  type="button"
+  data-penguin-open
+  aria-haspopup="dialog"
+  aria-controls="penguin-dialog"
+  aria-label={t.errors.penguinOpen}
+>
+  <span aria-hidden="true">🐧</span>
+  <span class="visually-hidden" data-penguin-open-label>{t.errors.penguinOpen}</span>
+</button>
+
+<dialog
+  class="penguin-egg__dialog"
+  id="penguin-dialog"
+  data-penguin-dialog
+  aria-labelledby="penguin-dialog-title"
+>
+  <div class="penguin-egg__window">
+    <p class="penguin-egg__title" id="penguin-dialog-title">penguin.exe</p>
+    <p data-penguin-body>{t.errors.penguinBody}</p>
+    <form method="dialog">
+      <button type="submit" data-penguin-close>{t.common.ok}</button>
+    </form>
+  </div>
+</dialog>
+
+<style>
+  .penguin-egg__mascot {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--xp-bsod-muted);
+    background: transparent;
+    color: var(--xp-titlebar-text);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .penguin-egg__mascot:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 3px;
+  }
+
+  .penguin-egg__dialog {
+    width: min(320px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .penguin-egg__dialog::backdrop {
+    background: rgb(0 0 0 / 0.35);
+  }
+
+  .penguin-egg__window {
+    width: min(320px, 100%);
+    overflow: hidden;
+    border: 1px solid var(--xp-border-dark);
+    background: var(--xp-window-bg);
+    color: var(--xp-text);
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  }
+
+  .penguin-egg__title {
+    margin: 0;
+    padding: 6px 10px;
+    color: var(--xp-titlebar-text);
+    font-weight: 700;
+    background: linear-gradient(
+      to bottom,
+      var(--xp-blue-light),
+      var(--xp-blue) 45%,
+      var(--xp-blue-dark)
+    );
+  }
+
+  .penguin-egg__window p:last-of-type {
+    margin: 16px 16px 12px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .penguin-egg__window form {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 16px 14px;
+  }
+
+  .penguin-egg__window button {
+    min-width: 74px;
+    min-height: 28px;
+    border: 1px solid var(--xp-border-dark);
+    background: linear-gradient(to bottom, var(--xp-button-top), var(--xp-button-bottom));
+    color: var(--xp-button-text);
+    cursor: pointer;
+  }
+
+  .penguin-egg__window button:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+</style>

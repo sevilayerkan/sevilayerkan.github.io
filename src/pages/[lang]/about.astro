@@ -1,0 +1,307 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import XPWindow from "../../components/xp/XPWindow.astro";
+import XPButton from "../../components/xp/XPButton.astro";
+import XPDialogTrigger from "../../components/xp/XPDialogTrigger.astro";
+import SkillDialogs from "../../components/xp/SkillDialogs.astro";
+import { siteConfig } from "../../config/site";
+import { getSkillDetail, skillDialogId } from "../../data/skills";
+import {
+  interpolate,
+  isLocale,
+  localeStaticPaths,
+  localizeHref,
+  ui,
+} from "../../i18n";
+
+export const getStaticPaths = (() => localeStaticPaths()) satisfies GetStaticPaths;
+
+const lang = isLocale(Astro.params.lang) ? Astro.params.lang : "en";
+const t = ui(lang);
+const about = t.about;
+---
+
+<BaseLayout title={about.title} description={about.metaDescription}>
+  <div class="page-stack about-page">
+    <XPWindow title={about.title}>
+      <div class="about-intro">
+        <p class="about-intro__eyebrow">{about.eyebrow}</p>
+        <h1>{interpolate(about.heading, { name: siteConfig.name })}</h1>
+        <p>{about.p1}</p>
+        <p>{about.p2}</p>
+      </div>
+    </XPWindow>
+
+    <XPWindow title={about.pathTitle}>
+      <ol class="timeline">
+        {
+          about.timeline.map((entry) => (
+            <li>
+              <p class="timeline__period">{entry.period}</p>
+              <div>
+                <h2>{entry.title}</h2>
+                <p>{entry.detail}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </XPWindow>
+
+    <XPWindow title={about.controlTitle}>
+      <div class="values">
+        <h2>{about.valuesHeading}</h2>
+        <p class="values__intro">{about.valuesIntro}</p>
+
+        <ul class="values__list">
+          {
+            about.values.map((value) => (
+              <li>
+                <span class="values__check" aria-hidden="true"></span>
+                <div>
+                  <h3>{value.title}</h3>
+                  <p>{value.detail}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </XPWindow>
+
+    <XPWindow title={about.skillsTitle}>
+      <div class="skills">
+        <h2>{about.skillsHeading}</h2>
+        <p class="skills__intro">{about.skillsIntro}</p>
+
+        <div class="skills__grid">
+          {
+            about.skillGroups.map((group) => (
+              <section class="skills__group">
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => {
+                    const detail = getSkillDetail(item);
+
+                    return (
+                      <li>
+                        {detail ? (
+                          <XPDialogTrigger dialog={skillDialogId(detail.id)}>
+                            {item}
+                          </XPDialogTrigger>
+                        ) : (
+                          item
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </XPWindow>
+
+    <div class="about-cta">
+      <XPButton href={localizeHref(lang, "/projects")} variant="primary">
+        {about.viewProjects}
+      </XPButton>
+      <XPButton href={localizeHref(lang, "/blog")}>{about.readNotes}</XPButton>
+      <XPButton href={localizeHref(lang, "/contact")}>{about.contactMe}</XPButton>
+    </div>
+  </div>
+
+  <SkillDialogs />
+</BaseLayout>
+
+<style>
+  .about-intro,
+  .values,
+  .skills {
+    padding: 8px clamp(2px, 3vw, 24px);
+  }
+
+  .about-intro__eyebrow,
+  .timeline__period {
+    margin: 0 0 8px;
+    color: var(--xp-heading);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .about-intro h1,
+  .values h2,
+  .skills h2 {
+    margin: 0 0 12px;
+    font-size: clamp(26px, 5vw, 40px);
+    line-height: 1.1;
+  }
+
+  .about-intro p,
+  .values__intro,
+  .skills__intro,
+  .timeline p {
+    max-width: 720px;
+    color: var(--xp-muted-text);
+    line-height: 1.65;
+  }
+
+  .about-intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline {
+    margin: 0;
+    padding: 4px clamp(2px, 3vw, 18px);
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.35fr) minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--xp-rule);
+  }
+
+  .timeline li:first-child {
+    border-top: 0;
+    padding-top: 4px;
+  }
+
+  .timeline h2 {
+    margin: 0 0 6px;
+    color: var(--xp-heading-strong);
+    font-size: 16px;
+  }
+
+  .timeline p:last-child {
+    margin: 0;
+  }
+
+  .values__list,
+  .skills__group ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .values__list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .values__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-content-bg);
+  }
+
+  .values__check {
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+    border: 1px solid var(--xp-border-dark);
+    background:
+      linear-gradient(to bottom, var(--xp-button-top), var(--xp-button-bottom));
+    box-shadow: inset 1px 1px 0 var(--xp-border-light);
+  }
+
+  .values__check::after {
+    content: "✓";
+    display: grid;
+    place-items: center;
+    color: var(--xp-check-mark);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 13px;
+  }
+
+  .values__list h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+  }
+
+  .values__list p {
+    margin: 0;
+    color: var(--xp-muted-text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .skills__group {
+    padding: 18px 16px 14px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-content-bg);
+  }
+
+  .skills__group h3 {
+    width: max-content;
+    margin: -28px 0 12px 2px;
+    padding: 0 6px;
+    background: var(--xp-content-bg);
+    color: var(--xp-caption);
+    font-size: 14px;
+  }
+
+  .skills__group ul {
+    display: grid;
+    gap: 8px;
+  }
+
+  .skills__group li {
+    color: var(--xp-text);
+    font-size: 14px;
+  }
+
+  .skills__group li :global(.xp-dialog-trigger) {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--xp-link);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .about-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 820px) {
+    .skills__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .timeline li {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .about-cta {
+      display: grid;
+    }
+
+    .about-cta :global(.xp-button) {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,135 @@
+---
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname)).regional;
+const common = ui(getLocaleFromPath(Astro.url.pathname)).common;
+---
+
+<XPDialog id="regional-options" title={t.title} size="md">
+  <div class="regional">
+    <p class="regional__intro">{t.intro}</p>
+
+    <fieldset class="regional__langs">
+      <legend class="visually-hidden">{t.legend}</legend>
+
+      <label class="regional-lang" data-locale-preview="en">
+        <input
+          class="visually-hidden"
+          type="radio"
+          name="xp-locale"
+          value="en"
+        />
+        <span class="regional-lang__badge" aria-hidden="true">EN</span>
+        <span class="regional-lang__copy">
+          <strong>{t.enName}</strong>
+          <span>{t.enHint}</span>
+        </span>
+      </label>
+
+      <label class="regional-lang" data-locale-preview="tr">
+        <input
+          class="visually-hidden"
+          type="radio"
+          name="xp-locale"
+          value="tr"
+        />
+        <span class="regional-lang__badge" aria-hidden="true">TR</span>
+        <span class="regional-lang__copy">
+          <strong>{t.trName}</strong>
+          <span>{t.trHint}</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <p class="regional__note">{t.note}</p>
+  </div>
+
+  <XPButton slot="footer" variant="primary" localeAction="ok">{common.ok}</XPButton>
+  <XPButton slot="footer" localeAction="cancel">{common.cancel}</XPButton>
+  <XPButton slot="footer" localeAction="apply">{common.apply}</XPButton>
+</XPDialog>
+
+<script>
+  import "../../scripts/locale";
+</script>
+
+<style>
+  .regional {
+    display: grid;
+    gap: 14px;
+  }
+
+  .regional__intro,
+  .regional__note {
+    margin: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.55;
+  }
+
+  .regional__langs {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .regional-lang {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-content-bg);
+    cursor: pointer;
+  }
+
+  .regional-lang:hover,
+  .regional-lang:focus-within,
+  .regional-lang.is-selected {
+    border-color: var(--xp-input-border);
+    background: var(--xp-list-hover);
+  }
+
+  .regional-lang:focus-within {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+
+  .regional-lang__badge {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    border: 1px solid var(--xp-border-dark);
+    background: linear-gradient(
+      to bottom,
+      var(--xp-blue-light),
+      var(--xp-blue) 45%,
+      var(--xp-blue-dark)
+    );
+    color: var(--xp-titlebar-text);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .regional-lang__copy {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .regional-lang__copy strong {
+    color: var(--xp-heading);
+    font-size: 13px;
+  }
+
+  .regional-lang__copy span {
+    color: var(--xp-muted-text);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogExplorer from "../../../components/xp/BlogExplorer.astro";
+import { getPublishedPosts } from "../../../lib/blog";
+import { isLocale, localeStaticPaths, ui } from "../../../i18n";
+
+export const getStaticPaths = (() => localeStaticPaths()) satisfies GetStaticPaths;
+
+const lang = isLocale(Astro.params.lang) ? Astro.params.lang : "en";
+const t = ui(lang);
+const posts = await getPublishedPosts(lang);
+---
+
+<BaseLayout title={t.notes.title} description={t.notes.metaDescription}>
+  <div class="page-stack">
+    <BlogExplorer posts={posts} />
+  </div>
+</BaseLayout>

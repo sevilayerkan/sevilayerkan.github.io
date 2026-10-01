@@ -1,0 +1,187 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import XPWindow from "../../components/xp/XPWindow.astro";
+import XPButton from "../../components/xp/XPButton.astro";
+import SystemProperties from "../../components/xp/SystemProperties.astro";
+import ProjectsExplorer from "../../components/xp/ProjectsExplorer.astro";
+import EngineeringNotes from "../../components/xp/EngineeringNotes.astro";
+import TaskManager from "../../components/xp/TaskManager.astro";
+import HomeContact from "../../components/xp/HomeContact.astro";
+import {
+  isLocale,
+  localeStaticPaths,
+  localizeHref,
+  ui,
+} from "../../i18n";
+
+export const getStaticPaths = (() => localeStaticPaths()) satisfies GetStaticPaths;
+
+const lang = isLocale(Astro.params.lang) ? Astro.params.lang : "en";
+const t = ui(lang);
+---
+
+<BaseLayout
+  title={t.home.metaTitle}
+  titleAsIs
+  description={t.home.metaDescription}
+>
+  <div class="home">
+    <section class="home__hero">
+      <XPWindow
+        title={t.home.welcomeTitle}
+        class="welcome-window"
+      >
+        <div class="welcome">
+          <p class="welcome__eyebrow">
+            {t.home.eyebrow}
+          </p>
+
+          <h1>
+            {t.home.headline}
+          </h1>
+
+          <p class="welcome__description">
+            {t.home.description}
+          </p>
+
+          <div class="welcome__actions">
+            <XPButton
+              href={localizeHref(lang, "/projects")}
+              variant="primary"
+            >
+              {t.home.viewProjects}
+            </XPButton>
+
+            <XPButton href={localizeHref(lang, "/blog")}>
+              {t.home.readBlog}
+            </XPButton>
+          </div>
+        </div>
+      </XPWindow>
+    </section>
+
+    <section class="home__section" aria-label={t.home.aboutRegion}>
+      <SystemProperties />
+    </section>
+
+    <section class="home__section home__section--wide" aria-label={t.home.projectsRegion}>
+      <ProjectsExplorer />
+    </section>
+
+    <section class="home__section home__section--wide" aria-label={t.home.notesRegion}>
+      <EngineeringNotes />
+    </section>
+
+    <section class="home__split">
+      <div>
+        <TaskManager />
+      </div>
+
+      <div>
+        <HomeContact />
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .home {
+    display: grid;
+    gap: 44px;
+    padding-bottom: 24px;
+  }
+
+  .home__hero {
+    min-height: 62vh;
+    display: grid;
+    place-items: center;
+  }
+
+  .home__section {
+    width: min(940px, 100%);
+    margin-inline: auto;
+  }
+
+  .home__section--wide {
+    width: min(1080px, 100%);
+  }
+
+  .home__split {
+    width: min(1080px, 100%);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .welcome-window {
+    width: min(720px, 100%);
+  }
+
+  .welcome {
+    padding:
+      22px
+      clamp(8px, 4vw, 38px);
+  }
+
+  .welcome__eyebrow {
+    margin: 0 0 10px;
+    font-weight: 700;
+  }
+
+  h1 {
+    max-width: 580px;
+    margin: 0 0 18px;
+    font-size:
+      clamp(
+        30px,
+        6vw,
+        54px
+      );
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .welcome__description {
+    max-width: 540px;
+    margin: 0 0 28px;
+    color: var(--xp-muted-text);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .welcome__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .home__split {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .home {
+      gap: 28px;
+    }
+
+    .home__hero {
+      min-height: auto;
+      padding-block: 20px 8px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .welcome__actions {
+      display: grid;
+    }
+
+    .welcome__actions :global(.xp-button) {
+      width: 100%;
+    }
+  }
+</style>

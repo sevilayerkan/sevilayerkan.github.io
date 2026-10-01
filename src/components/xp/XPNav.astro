@@ -1,0 +1,160 @@
+---
+import { siteConfig, siteHostname } from "../../config/site";
+import WindowControls from "./WindowControls.astro";
+import {
+  getLocaleFromPath,
+  localizeHref,
+  stripLocale,
+  ui,
+} from "../../i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale);
+const currentPath = stripLocale(Astro.url.pathname);
+const hostLabel = siteHostname();
+
+const navItems = [
+  { label: t.nav.home, href: localizeHref(locale, "/"), path: "/" },
+  { label: t.nav.projects, href: localizeHref(locale, "/projects"), path: "/projects" },
+  { label: t.nav.blog, href: localizeHref(locale, "/blog"), path: "/blog" },
+  { label: t.nav.about, href: localizeHref(locale, "/about"), path: "/about" },
+  { label: t.nav.streams, href: localizeHref(locale, "/streams"), path: "/streams" },
+  { label: t.nav.contact, href: localizeHref(locale, "/contact"), path: "/contact" },
+];
+---
+
+<header class="xp-nav">
+  <div class="xp-nav__topbar">
+    <a
+      class="xp-nav__brand"
+      href={localizeHref(locale, "/")}
+      aria-label={`${siteConfig.name} ${t.meta.brandHome}`}
+    >
+      <span class="xp-nav__brand-icon" aria-hidden="true">💻</span>
+      <span>{hostLabel}</span>
+    </a>
+
+    <WindowControls />
+  </div>
+
+  <nav class="xp-nav__menu" aria-label={t.meta.navLabel}>
+    {
+      navItems.map((item) => {
+        const isActive =
+          item.path === "/"
+            ? currentPath === "/"
+            : currentPath === item.path || currentPath.startsWith(`${item.path}/`);
+
+        return (
+          <a
+            class:list={[
+              "xp-nav__link",
+              { "xp-nav__link--active": isActive },
+            ]}
+            href={item.href}
+            aria-current={isActive ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+</header>
+
+<style>
+  .xp-nav {
+    overflow: hidden;
+    border: 1px solid var(--xp-blue-dark);
+    border-radius: var(--xp-radius) var(--xp-radius) 3px 3px;
+    background: var(--xp-window-bg);
+    box-shadow: var(--xp-window-shadow);
+  }
+
+  .xp-nav__topbar {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 4px 5px 4px 9px;
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-blue-light),
+        var(--xp-blue) 45%,
+        var(--xp-blue-dark)
+      );
+  }
+
+  .xp-nav__brand {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--xp-titlebar-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.35);
+  }
+
+  .xp-nav__brand-icon {
+    font-size: 15px;
+  }
+
+  .xp-nav__brand span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .xp-nav__menu {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    padding: 5px;
+    overflow-x: auto;
+    background: var(--xp-window-bg);
+    border-top: 1px solid var(--xp-nav-menu-edge);
+  }
+
+  .xp-nav__link {
+    flex: 0 0 auto;
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 12px;
+    border: 1px solid transparent;
+    color: var(--xp-text);
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .xp-nav__link:hover,
+  .xp-nav__link--active {
+    border-color: var(--xp-nav-hover-border);
+    background: var(--xp-nav-hover-bg);
+  }
+
+  .xp-nav__link:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: -2px;
+  }
+
+  @media (max-width: 640px) {
+    .xp-nav__brand {
+      font-size: 13px;
+    }
+
+    .xp-nav__menu {
+      padding-bottom: 6px;
+    }
+
+    .xp-nav__link {
+      padding-inline: 10px;
+    }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { skillDetails, skillDialogId } from "../../data/skills";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+---
+
+{
+  skillDetails.map((skill) => {
+    const copy = t.skills.details[skill.id as keyof typeof t.skills.details];
+
+    return (
+      <XPDialog id={skillDialogId(skill.id)} title={skill.name} size="sm">
+        <dl class="skill-props">
+          <div>
+            <dt>{t.skills.category}</dt>
+            <dd>{copy?.category ?? skill.category}</dd>
+          </div>
+          <div>
+            <dt>{t.skills.howIUse}</dt>
+            <dd>{copy?.howIUseIt ?? skill.howIUseIt}</dd>
+          </div>
+          <div>
+            <dt>{t.skills.related}</dt>
+            <dd>{skill.related.join(" • ")}</dd>
+          </div>
+        </dl>
+
+        <XPButton slot="footer" dialogClose>
+          {t.common.close}
+        </XPButton>
+      </XPDialog>
+    );
+  })
+}
+
+<style>
+  .skill-props {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+
+  .skill-props div {
+    margin: 0;
+  }
+
+  .skill-props dt {
+    margin-bottom: 3px;
+    color: var(--xp-heading);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .skill-props dd {
+    margin: 0;
+    color: var(--xp-text);
+  }
+</style>

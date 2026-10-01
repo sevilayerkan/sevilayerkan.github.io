@@ -1,0 +1,171 @@
+---
+import WindowControls from "./WindowControls.astro";
+
+interface Props {
+  id: string;
+  title: string;
+  size?: "sm" | "md" | "lg";
+  closeLabel?: string;
+  class?: string;
+}
+
+const {
+  id,
+  title,
+  size = "md",
+  closeLabel = "Close",
+  class: className = "",
+} = Astro.props;
+
+const titleId = `${id}-title`;
+---
+
+<dialog
+  class:list={["xp-dialog", `xp-dialog--${size}`, className]}
+  id={id}
+  data-xp-dialog
+  aria-labelledby={titleId}
+>
+  <div class="xp-dialog__window">
+    <div class="xp-dialog__titlebar">
+      <h2 class="xp-dialog__title" id={titleId} tabindex="-1">
+        {title}
+      </h2>
+
+      <WindowControls closeMode="dialog" closeLabel={closeLabel} />
+    </div>
+
+    <div class="xp-dialog__body">
+      <slot />
+    </div>
+
+    <div class="xp-dialog__footer">
+      <slot name="footer" />
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import "../../scripts/xp-dialog";
+</script>
+
+<style>
+  .xp-dialog {
+    width: min(var(--xp-dialog-width, 460px), calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .xp-dialog--sm {
+    --xp-dialog-width: 360px;
+  }
+
+  .xp-dialog--md {
+    --xp-dialog-width: 460px;
+  }
+
+  .xp-dialog--lg {
+    --xp-dialog-width: 560px;
+  }
+
+  .xp-dialog::backdrop {
+    background: var(--xp-dialog-backdrop);
+  }
+
+  .xp-dialog[open] {
+    animation: xp-dialog-in 120ms ease-out;
+  }
+
+  @keyframes xp-dialog-in {
+    from {
+      opacity: 0.65;
+      transform: scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xp-dialog[open] {
+      animation: none;
+    }
+  }
+
+  .xp-dialog__window {
+    overflow: auto;
+    max-height: calc(100vh - 24px);
+    border: 1px solid var(--xp-blue-dark);
+    background: var(--xp-window-bg);
+    box-shadow: var(--xp-dialog-shadow);
+  }
+
+  .xp-dialog__titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 32px;
+    padding: 4px 5px 4px 9px;
+    color: var(--xp-titlebar-text);
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-blue-light),
+        var(--xp-blue) 45%,
+        var(--xp-blue-dark)
+      );
+  }
+
+  .xp-dialog__title {
+    min-width: 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.25;
+    outline: none;
+  }
+
+  .xp-dialog__title:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 2px;
+  }
+
+  .xp-dialog__body {
+    padding: 16px;
+    border: 2px solid var(--xp-window-bg);
+    background: var(--xp-content-bg);
+    color: var(--xp-text);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .xp-dialog__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--xp-window-bg);
+  }
+
+  .xp-dialog__footer:empty {
+    display: none;
+  }
+
+  @media (max-width: 560px) {
+    .xp-dialog__footer {
+      display: grid;
+    }
+
+    .xp-dialog__footer :global(.xp-button) {
+      width: 100%;
+    }
+  }
+</style>

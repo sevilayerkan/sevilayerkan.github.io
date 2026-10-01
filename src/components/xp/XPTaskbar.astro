@@ -1,0 +1,216 @@
+---
+import PenguinStatus from "./PenguinStatus.astro";
+import { siteConfig } from "../../config/site";
+import { getLocaleFromPath, localizeHref, ui } from "../../i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale);
+---
+
+<footer class="xp-taskbar">
+  <a class="xp-taskbar__start" href={localizeHref(locale, "/")}>
+    <span aria-hidden="true">🟢</span>
+    {t.taskbar.start}
+  </a>
+
+  <div class="xp-taskbar__active">
+    <span aria-hidden="true">💻</span>
+    {siteConfig.name}
+  </div>
+
+  <div class="xp-taskbar__tray">
+    <button
+      class="xp-taskbar__display"
+      type="button"
+      data-xp-dialog-open="display-properties"
+      aria-haspopup="dialog"
+      aria-controls="display-properties"
+      title={t.taskbar.display}
+      aria-label={t.taskbar.display}
+    >
+      <span aria-hidden="true">🖥️</span>
+    </button>
+    <button
+      class="xp-taskbar__run"
+      type="button"
+      data-xp-dialog-open="run-dialog"
+      aria-haspopup="dialog"
+      aria-controls="run-dialog"
+      title={`${t.taskbar.run} (Ctrl+Alt+R)`}
+      aria-label={`${t.taskbar.run} (Ctrl+Alt+R)`}
+    >
+      {t.taskbar.run}
+    </button>
+    <button
+      class="xp-taskbar__locale"
+      type="button"
+      data-xp-dialog-open="regional-options"
+      aria-haspopup="dialog"
+      aria-controls="regional-options"
+      title={t.taskbar.language}
+      aria-label={t.taskbar.language}
+    >
+      {locale.toUpperCase()}
+    </button>
+    <PenguinStatus label={t.taskbar.penguin} />
+    <span>{t.taskbar.online}</span>
+  </div>
+</footer>
+
+<style>
+  .xp-taskbar {
+    min-height: 42px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    margin-top: 34px;
+    border-top: 1px solid var(--xp-taskbar-edge);
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-taskbar-top),
+        var(--xp-taskbar-mid) 48%,
+        var(--xp-taskbar-bottom)
+      );
+    box-shadow: 0 -2px 8px rgb(0 0 0 / 0.18);
+    color: var(--xp-taskbar-text);
+    font-size: 12px;
+  }
+
+  .xp-taskbar__start {
+    align-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 18px 0 12px;
+    border-radius: 0 14px 14px 0;
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-start-top),
+        var(--xp-start-mid) 48%,
+        var(--xp-start-bottom)
+      );
+    color: var(--xp-taskbar-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.35);
+  }
+
+  .xp-taskbar__start:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 2px;
+  }
+
+  .xp-taskbar__active {
+    min-width: 0;
+    width: min(220px, calc(100% - 12px));
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--xp-task-active-border);
+    border-radius: 2px;
+    background: var(--xp-task-active-bg);
+    box-shadow: inset 1px 1px rgb(255 255 255 / 0.2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .xp-taskbar__tray {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 12px;
+    background: var(--xp-tray-bg);
+    border-left: 1px solid var(--xp-tray-border);
+  }
+
+  .xp-taskbar__display {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .xp-taskbar__display:hover,
+  .xp-taskbar__display:focus-visible {
+    border-color: rgb(255 255 255 / 0.55);
+    background: rgb(0 0 0 / 0.12);
+  }
+
+  .xp-taskbar__display:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 1px;
+  }
+
+  .xp-taskbar__locale {
+    min-width: 28px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    padding: 0 5px;
+    border: 1px solid rgb(255 255 255 / 0.45);
+    background: rgb(0 0 0 / 0.12);
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+
+  .xp-taskbar__run {
+    min-width: 28px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    padding: 0 6px;
+    border: 1px solid rgb(255 255 255 / 0.45);
+    background: rgb(0 0 0 / 0.12);
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .xp-taskbar__run:hover,
+  .xp-taskbar__run:focus-visible,
+  .xp-taskbar__locale:hover,
+  .xp-taskbar__locale:focus-visible {
+    border-color: rgb(255 255 255 / 0.75);
+    background: rgb(0 0 0 / 0.2);
+  }
+
+  .xp-taskbar__run:focus-visible,
+  .xp-taskbar__locale:focus-visible {
+    outline: 2px solid var(--xp-focus-on-blue);
+    outline-offset: 1px;
+  }
+
+  @media (max-width: 560px) {
+    .xp-taskbar {
+      grid-template-columns: auto 1fr;
+    }
+
+    .xp-taskbar__active {
+      display: none;
+    }
+
+    .xp-taskbar__tray {
+      justify-self: stretch;
+      justify-content: flex-end;
+    }
+  }
+</style>

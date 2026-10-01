@@ -1,0 +1,132 @@
+---
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { isConfigured, siteConfig } from "../../config/site";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+const github = isConfigured(siteConfig.github) ? siteConfig.github : "";
+const linkedin = isConfigured(siteConfig.linkedin) ? siteConfig.linkedin : "";
+---
+
+<XPDialog id="run-dialog" title={t.run.title} size="sm" closeLabel={t.common.close}>
+  <form
+    class="run-dialog"
+    data-run-form
+    id="run-dialog-form"
+    data-run-github={github}
+    data-run-linkedin={linkedin}
+    data-run-unknown={t.run.unknown}
+    data-run-missing={t.run.missingLink}
+    data-run-empty={t.run.empty}
+    data-run-help={t.run.help}
+  >
+    <p class="run-dialog__prompt">{t.run.prompt}</p>
+
+    <label class="run-dialog__field">
+      <span>{t.run.open}</span>
+      <input
+        id="run-input"
+        name="command"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        data-run-input
+        data-xp-initial-focus
+        aria-describedby="run-status-title run-status"
+      />
+    </label>
+
+    <p class="run-dialog__status-title" id="run-status-title" data-run-status-title hidden>
+      {t.run.helpTitle}
+    </p>
+    <p
+      class="run-dialog__status"
+      id="run-status"
+      data-run-status
+      role="alert"
+      hidden
+    ></p>
+  </form>
+
+  <XPButton slot="footer" variant="primary" submit form="run-dialog-form">
+    {t.run.run}
+  </XPButton>
+  <XPButton slot="footer" dialogClose>
+    {t.common.cancel}
+  </XPButton>
+</XPDialog>
+
+<script>
+  import "../../scripts/run";
+</script>
+
+<style>
+  .run-dialog {
+    display: grid;
+    gap: 12px;
+  }
+
+  .run-dialog__prompt {
+    margin: 0;
+    color: var(--xp-text);
+    line-height: 1.5;
+  }
+
+  .run-dialog__field {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+  }
+
+  .run-dialog__field span {
+    font-weight: 700;
+  }
+
+  .run-dialog__field input {
+    min-width: 0;
+    width: 100%;
+    min-height: 28px;
+    padding: 3px 6px;
+    border: 1px solid var(--xp-input-border);
+    background: var(--xp-content-bg);
+    color: var(--xp-text);
+  }
+
+  .run-dialog__field input:focus-visible {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 1px;
+  }
+
+  .run-dialog__status-title {
+    margin: 0;
+    color: var(--xp-heading);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .run-dialog__status {
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-panel);
+    color: var(--xp-text);
+    font-family: "Lucida Console", Consolas, "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+
+  .run-dialog__status[data-kind="error"] {
+    border-color: var(--xp-status-warn);
+    color: var(--xp-status-warn);
+  }
+
+  @media (max-width: 560px) {
+    .run-dialog__field {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>

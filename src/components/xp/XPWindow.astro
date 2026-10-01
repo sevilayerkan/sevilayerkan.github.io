@@ -1,0 +1,81 @@
+---
+import WindowControls from "./WindowControls.astro";
+
+interface Props {
+  title: string;
+  class?: string;
+}
+
+const {
+  title,
+  class: className = "",
+} = Astro.props;
+---
+
+<section class={`xp-window ${className}`}>
+  <div class="xp-window__titlebar">
+    <span class="xp-window__title">
+      {title}
+    </span>
+
+    <WindowControls />
+  </div>
+
+  <div class="xp-window__body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .xp-window {
+    overflow: hidden;
+    background: var(--xp-window-bg);
+    border: 1px solid var(--xp-blue-dark);
+    border-radius:
+      var(--xp-radius)
+      var(--xp-radius)
+      2px
+      2px;
+    box-shadow:
+      var(--xp-window-shadow);
+  }
+
+  .xp-window__titlebar {
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 5px 4px 9px;
+    color: var(--xp-titlebar-text);
+    font-weight: 700;
+    font-size: 14px;
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-blue-light),
+        var(--xp-blue) 45%,
+        var(--xp-blue-dark)
+      );
+  }
+
+  .xp-window__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .xp-window__body {
+    padding: 22px;
+    border: 2px solid var(--xp-window-bg);
+    background: var(--xp-content-bg);
+  }
+
+  @media (max-width: 640px) {
+    .xp-window__body {
+      padding: 18px;
+    }
+  }
+</style>

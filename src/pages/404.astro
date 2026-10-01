@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BSODError from "../components/xp/BSODError.astro";
+import PenguinEasterEgg from "../components/xp/PenguinEasterEgg.astro";
+import { defaultLocale, ui } from "../i18n";
+import { siteConfig } from "../config/site";
+
+const t = ui(defaultLocale).errors;
+const titles = {
+  en: `${ui("en").errors.title} | ${siteConfig.name}`,
+  tr: `${ui("tr").errors.title} | ${siteConfig.name}`,
+};
+const descriptions = {
+  en: ui("en").errors.description,
+  tr: ui("tr").errors.description,
+};
+---
+
+<BaseLayout
+  title={t.title}
+  description={t.description}
+  chrome={false}
+  robots="noindex"
+  themeColor="#0a24a8"
+  themeColorDark="#081c7a"
+>
+  <script
+    slot="head"
+    is:inline
+    define:vars={{ defaultLocale, titles, descriptions }}
+  >
+    (function () {
+      function isLocale(value) {
+        return value === "en" || value === "tr";
+      }
+      var first = location.pathname.split("/").filter(Boolean)[0];
+      var stored = null;
+      try {
+        stored = localStorage.getItem("xp-locale");
+      } catch (error) {}
+      var locale = isLocale(first)
+        ? first
+        : isLocale(stored)
+          ? stored
+          : defaultLocale;
+      document.documentElement.lang = locale;
+      document.title = titles[locale];
+      var meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", descriptions[locale]);
+    })();
+  </script>
+
+  <BSODError>
+    <PenguinEasterEgg />
+  </BSODError>
+</BaseLayout>

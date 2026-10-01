@@ -1,0 +1,257 @@
+---
+import XPWindow from "./XPWindow.astro";
+import XPButton from "./XPButton.astro";
+import XPDialogTrigger from "./XPDialogTrigger.astro";
+import SkillDialogs from "./SkillDialogs.astro";
+import { siteConfig } from "../../config/site";
+import { getSkillDetail, skillDialogId } from "../../data/skills";
+import { getLocaleFromPath, localizeHref, ui } from "../../i18n";
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const t = ui(locale);
+
+const skills = [
+  "API Testing",
+  "Test Automation",
+  "Playwright",
+  "CI/CD",
+  t.home.extraSkill,
+];
+---
+
+<XPWindow title={t.home.systemTitle}>
+  <div class="system-properties">
+    <div class="system-properties__identity">
+      <div class="system-properties__monitor" aria-hidden="true">
+        <div class="system-properties__screen">
+          <span>QA</span>
+        </div>
+        <div class="system-properties__stand"></div>
+      </div>
+
+      <div>
+        <p class="system-properties__label">{t.home.registeredTo}</p>
+        <h2>{siteConfig.name}</h2>
+        <p class="system-properties__role">{t.home.role}</p>
+      </div>
+    </div>
+
+    <div class="system-properties__details">
+      <div class="system-properties__group">
+        <h3>{t.home.installed}</h3>
+
+        <ul>
+          {
+            skills.map((skill) => {
+              const detail = getSkillDetail(skill);
+
+              return (
+                <li>
+                  <span aria-hidden="true">✓</span>
+                  {detail ? (
+                    <XPDialogTrigger dialog={skillDialogId(detail.id)}>
+                      {skill}
+                    </XPDialogTrigger>
+                  ) : (
+                    skill
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+
+      <div class="system-properties__about">
+        <p>
+          {t.home.aboutBlurb}
+        </p>
+
+        <XPButton href={localizeHref(locale, "/about")}>
+          {t.home.moreAbout}
+        </XPButton>
+      </div>
+    </div>
+  </div>
+</XPWindow>
+
+<SkillDialogs />
+
+<style>
+  .system-properties {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.6fr);
+    min-height: 320px;
+  }
+
+  .system-properties__identity {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 26px;
+    padding: 30px;
+    background:
+      linear-gradient(
+        135deg,
+        var(--xp-sidebar-from),
+        var(--xp-sidebar-to)
+      );
+    border-right: 1px solid var(--xp-sidebar-border);
+  }
+
+  .system-properties__monitor {
+    width: 118px;
+  }
+
+  .system-properties__screen {
+    height: 82px;
+    display: grid;
+    place-items: center;
+    border: 6px solid var(--xp-monitor-bezel);
+    border-radius: 7px;
+    background:
+      linear-gradient(
+        to bottom,
+        var(--xp-blue-light),
+        var(--xp-blue) 55%,
+        var(--xp-blue-dark)
+      );
+    box-shadow:
+      inset 0 0 0 2px var(--xp-monitor-inset),
+      3px 4px 0 rgba(0, 0, 0, 0.14);
+  }
+
+  .system-properties__screen span {
+    color: var(--xp-titlebar-text);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.35);
+  }
+
+  .system-properties__stand {
+    width: 50px;
+    height: 18px;
+    margin: 0 auto;
+    border-radius: 0 0 5px 5px;
+    background: var(--xp-monitor-stand);
+    box-shadow:
+      0 5px 0 -2px var(--xp-monitor-stand-shadow);
+  }
+
+  .system-properties__label {
+    margin: 0 0 4px;
+    color: var(--xp-muted-text);
+    font-size: 12px;
+  }
+
+  .system-properties h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .system-properties__role {
+    margin: 5px 0 0;
+    color: var(--xp-muted-text);
+  }
+
+  .system-properties__details {
+    display: grid;
+    gap: 24px;
+    align-content: center;
+    padding: 30px;
+  }
+
+  .system-properties__group {
+    padding: 18px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-content-bg);
+  }
+
+  .system-properties__group h3 {
+    width: max-content;
+    margin: -28px 0 12px 4px;
+    padding: 0 6px;
+    background: var(--xp-content-bg);
+    color: var(--xp-caption);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .system-properties ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 9px;
+  }
+
+  .system-properties li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+  }
+
+  .system-properties li > span {
+    color: var(--xp-green);
+    font-weight: 700;
+  }
+
+  .system-properties li :global(.xp-dialog-trigger) {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--xp-link);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .system-properties__about {
+    display: grid;
+    justify-items: start;
+    gap: 14px;
+  }
+
+  .system-properties__about p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 760px) {
+    .system-properties {
+      grid-template-columns: 1fr;
+    }
+
+    .system-properties__identity {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      justify-content: start;
+      border-right: 0;
+      border-bottom: 1px solid var(--xp-sidebar-border);
+    }
+
+    .system-properties__details {
+      padding: 24px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .system-properties__identity {
+      grid-template-columns: 1fr;
+      padding: 22px 20px;
+    }
+
+    .system-properties__details {
+      padding: 20px 16px;
+    }
+
+    .system-properties__group {
+      padding-inline: 14px;
+    }
+  }
+</style>

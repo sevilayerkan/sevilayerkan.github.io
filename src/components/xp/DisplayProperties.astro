@@ -1,0 +1,193 @@
+---
+import XPDialog from "./XPDialog.astro";
+import XPButton from "./XPButton.astro";
+import { getLocaleFromPath, ui } from "../../i18n";
+
+const t = ui(getLocaleFromPath(Astro.url.pathname));
+---
+
+<XPDialog id="display-properties" title={t.display.title} size="md">
+  <div class="display-props">
+    <p class="display-props__intro">
+      {t.display.intro}
+    </p>
+
+    <fieldset class="display-props__themes">
+      <legend class="visually-hidden">{t.display.schemeLegend}</legend>
+
+      <label class="display-theme" data-theme-preview="xp-light">
+        <input
+          class="visually-hidden"
+          type="radio"
+          name="xp-appearance"
+          value="xp-light"
+        />
+        <span
+          class="display-theme__preview display-theme__preview--light"
+          aria-hidden="true"
+        >
+          <span class="display-theme__titlebar"></span>
+          <span class="display-theme__body">
+            <span class="display-theme__hill"></span>
+          </span>
+        </span>
+        <span class="display-theme__copy">
+          <strong>{t.display.lightName}</strong>
+          <span>{t.display.lightHint}</span>
+        </span>
+      </label>
+
+      <label class="display-theme" data-theme-preview="xp-dark">
+        <input
+          class="visually-hidden"
+          type="radio"
+          name="xp-appearance"
+          value="xp-dark"
+        />
+        <span
+          class="display-theme__preview display-theme__preview--dark"
+          aria-hidden="true"
+        >
+          <span class="display-theme__titlebar"></span>
+          <span class="display-theme__body">
+            <span class="display-theme__hill"></span>
+          </span>
+        </span>
+        <span class="display-theme__copy">
+          <strong>{t.display.darkName}</strong>
+          <span>{t.display.darkHint}</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <p class="display-props__note">
+      {t.display.note}
+    </p>
+  </div>
+
+  <XPButton slot="footer" variant="primary" themeAction="ok">{t.common.ok}</XPButton>
+  <XPButton slot="footer" themeAction="cancel">{t.common.cancel}</XPButton>
+  <XPButton slot="footer" themeAction="apply">{t.common.apply}</XPButton>
+</XPDialog>
+
+<script>
+  import "../../scripts/theme";
+</script>
+
+<style>
+  .display-props {
+    display: grid;
+    gap: 14px;
+  }
+
+  .display-props__intro,
+  .display-props__note {
+    margin: 0;
+    color: var(--xp-muted-text);
+    line-height: 1.55;
+  }
+
+  .display-props__themes {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .display-theme {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--xp-border-mid);
+    background: var(--xp-content-bg);
+    cursor: pointer;
+  }
+
+  .display-theme:hover,
+  .display-theme:focus-within,
+  .display-theme.is-selected {
+    border-color: var(--xp-input-border);
+    background: var(--xp-list-hover);
+  }
+
+  .display-theme:focus-within {
+    outline: 2px solid var(--xp-focus);
+    outline-offset: 2px;
+  }
+
+  .display-theme__preview {
+    display: grid;
+    grid-template-rows: 10px 1fr;
+    width: 92px;
+    height: 64px;
+    overflow: hidden;
+    border: 1px solid #003c74;
+  }
+
+  .display-theme__titlebar {
+    background: linear-gradient(to bottom, #3c8cf3, #245edb 45%, #0c3a9e);
+  }
+
+  .display-theme__body {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .display-theme__hill {
+    position: absolute;
+    inset: auto 0 0;
+    height: 42%;
+    border-radius: 50% 50% 0 0;
+  }
+
+  .display-theme__preview--light .display-theme__body {
+    background: #6fa6ea;
+  }
+
+  .display-theme__preview--light .display-theme__hill {
+    background: #3f8f38;
+  }
+
+  .display-theme__preview--dark .display-theme__titlebar {
+    background: linear-gradient(to bottom, #3a78d4, #1e56b8 45%, #0a2c70);
+  }
+
+  .display-theme__preview--dark .display-theme__body {
+    background: #1b335c;
+  }
+
+  .display-theme__preview--dark .display-theme__hill {
+    background: #1a3d24;
+  }
+
+  .display-theme__copy {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .display-theme__copy strong {
+    color: var(--xp-heading);
+    font-size: 13px;
+  }
+
+  .display-theme__copy span {
+    color: var(--xp-muted-text);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 560px) {
+    .display-theme {
+      grid-template-columns: 72px minmax(0, 1fr);
+    }
+
+    .display-theme__preview {
+      width: 72px;
+      height: 52px;
+    }
+  }
+</style>
